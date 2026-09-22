@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — drawn from the school crest (saffron turban, maroon kurta) */
+  --color-navy-950: #0f1a30;
+  --color-navy-900: #16233f;
+  --color-navy-800: #1e2d52;
+  --color-navy-700: #2a3c68;
+  --color-saffron-500: #ec8e2c;
+  --color-saffron-600: #d97a1a;
+  --color-saffron-100: #fdead0;
+  --color-maroon-700: #8b2e3a;
+  --color-maroon-600: #a13847;
+  --color-paper-50: #fbf6ec;
+  --color-paper-100: #f4ecdc;
+  --color-ink-900: #241c15;
+
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Work Sans", "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink-900);
+  background-color: var(--color-paper-50);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
