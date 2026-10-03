@@ -1,0 +1,100 @@
+.admission-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: admission-fade-in 0.2s ease-out;
+}
+
+.admission-panel {
+  position: relative;
+  width: 100%;
+  max-width: 42rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: admission-scale-in 0.2s ease-out;
+}
+
+.admission-close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.05);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admission-close:hover {
+  background: rgba(15, 23, 42, 0.1);
+  color: rgba(15, 23, 42, 0.9);
+}
+
+.admission-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.admission-field input,
+.admission-field select,
+.admission-field textarea {
+  font-weight: 400;
+  font-size: 0.95rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #fff;
+  color: rgba(15, 23, 42, 0.9);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admission-field input:focus,
+.admission-field select:focus,
+.admission-field textarea:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+.admission-field textarea {
+  resize: vertical;
+}
+
+@keyframes admission-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes admission-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
