@@ -1,0 +1,20 @@
+// SVG path data (24x24 viewBox, stroke icons). Rendered by components/common/Icon.jsx
+export const ICONS = {
+  pin: "M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
+  phone: "M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z",
+  mail: "M3 6h18v12H3V6Zm0 0 9 7 9-7",
+  chevron: "m6 9 6 6 6-6",
+  plus: "M12 5v14M5 12h14",
+  check: "M5 12.5 10 17.5 19 7",
+  arrow: "M5 12h14m-6-6 6 6-6 6",
+  close: "M6 6l12 12M18 6 6 18",
+  wallet: "M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Zm0 0V6a2 2 0 0 1 2-2h11M17 14h2",
+  calendar: "M4 6h16v14H4V6Zm0 5h16M8 3v4m8-4v4",
+  award: "M12 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm-3.5-.5L7 21l5-3 5 3-1.5-7.5",
+  book: "M4 19V5a1 1 0 0 1 1-1h5v16H5a1 1 0 0 1-1-1Zm9 1V4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5Z",
+  user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8c0-3.3 3.1-6 7-6s7 2.7 7 6",
+  briefcase: "M4 8h16v11H4V8Zm5 0V5h6v3M4 13h16",
+  megaphone: "M4 10v4h3l7 4V6L7 10H4Zm12 0a3 3 0 0 1 0 4",
+  lock: "M6 11h12v9H6v-9Zm3 0V8a3 3 0 0 1 6 0v3",
+  image: "M4 5h16v14H4V5Zm0 11 4-4 4 4 3-3 5 5M9 9.5h.01",
+};
