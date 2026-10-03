@@ -17,11 +17,43 @@
 
   --font-display: "Fraunces", "Georgia", serif;
   --font-body: "Work Sans", "Segoe UI", sans-serif;
+
+  /* Motion tokens — every animation in the app is defined here */
+  --animate-marquee: marquee 34s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-delay: float 6s ease-in-out 0.4s infinite;
+  --animate-page-in: page-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-hero-in: hero-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-draw: draw 0.9s ease 0.8s both;
+  --animate-draw-x: draw-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+  --animate-pop: pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade: fade 0.3s ease both;
+  --animate-ken: ken 22s ease-in-out infinite alternate;
+
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(2deg); }
+  }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(26px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes draw-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(18px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes ken { from { transform: scale(1); } to { transform: scale(1.09); } }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
@@ -29,8 +61,12 @@ body {
   background-color: var(--color-paper-50);
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
+h1, h2, h3, h4 { font-family: var(--font-display); }
+
+:focus-visible {
+  outline: 3px solid var(--color-saffron-500);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
