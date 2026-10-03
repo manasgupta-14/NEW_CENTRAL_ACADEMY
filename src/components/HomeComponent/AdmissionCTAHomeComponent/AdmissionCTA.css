@@ -1,0 +1,9 @@
+.cta-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(22, 35, 63, 0.14) 2px, transparent 2px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+          mask-image: linear-gradient(to bottom, transparent, black 40%, black 60%, transparent);
+}

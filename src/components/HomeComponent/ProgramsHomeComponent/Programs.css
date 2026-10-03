@@ -1,0 +1,34 @@
+.programs-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+}
+
+.programs-item {
+  position: relative;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(251, 246, 236, 0.15);
+}
+
+.programs-connector {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .programs-connector {
+    display: block;
+    position: absolute;
+    top: -2px;
+    left: 100%;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--color-saffron-500);
+  }
+}
+
+@media (max-width: 767px) {
+  .programs-track {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
