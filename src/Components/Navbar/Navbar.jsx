@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../../assets/logo.png";
+import AdmissionForm from "../AdmissionForm/AdmissionForm";
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/admissions", label: "Admissions" },
+  { to: "/#about", label: "About" },
+  { action: "admission", label: "Admissions" },
   { to: "/activities", label: "Activities" },
   { to: "/gallery", label: "Gallery" },
   { to: "/notice", label: "Notice" },
@@ -28,6 +29,7 @@ const MORE_LINKS = [
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [studentOpen, setStudentOpen] = useState(false);
+  const [admissionOpen, setAdmissionOpen] = useState(false);
 
   return (
     <header className="w-full sticky top-0 z-50">
@@ -136,15 +138,26 @@ function Navbar() {
       <nav className="hidden md:block bg-navy-900 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center gap-8 h-14">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="relative py-4 text-paper-50/90 hover:text-saffron-500 font-medium text-sm transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-saffron-500 after:transition-all after:duration-300 hover:after:w-full"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) =>
+              link.action === "admission" ? (
+                <button
+                  key="admission"
+                  type="button"
+                  onClick={() => setAdmissionOpen(true)}
+                  className="relative py-4 text-paper-50/90 hover:text-saffron-500 font-medium text-sm transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-saffron-500 after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  {link.label}
+                </button>
+              ) : (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="relative py-4 text-paper-50/90 hover:text-saffron-500 font-medium text-sm transition-colors after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-0.5 after:w-0 after:bg-saffron-500 after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
 
             <div
               className="relative py-4"
@@ -196,23 +209,39 @@ function Navbar() {
 
       {/* Main nav — mobile */}
       <div
-        className={`md:hidden bg-navy-900 overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-          menuOpen ? "max-h-[28rem]" : "max-h-0"
+        className={`md:hidden bg-navy-900 overflow-y-auto transition-[max-height] duration-300 ease-in-out ${
+          menuOpen ? "max-h-[calc(100vh-7rem)]" : "max-h-0"
         }`}
       >
         <div className="px-4 py-3 flex flex-col">
-          {[...NAV_LINKS, ...STUDENT_LINKS, ...MORE_LINKS].map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={() => setMenuOpen(false)}
-              className="text-paper-50/90 hover:text-saffron-500 font-medium text-sm py-2.5 border-b border-paper-50/10 last:border-none"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {[...NAV_LINKS, ...STUDENT_LINKS, ...MORE_LINKS].map((link) =>
+            link.action === "admission" ? (
+              <button
+                key="admission-mobile"
+                type="button"
+                onClick={() => {
+                  setAdmissionOpen(true);
+                  setMenuOpen(false);
+                }}
+                className="text-left text-paper-50/90 hover:text-saffron-500 font-medium text-sm py-2.5 border-b border-paper-50/10 last:border-none"
+              >
+                {link.label}
+              </button>
+            ) : (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setMenuOpen(false)}
+                className="text-paper-50/90 hover:text-saffron-500 font-medium text-sm py-2.5 border-b border-paper-50/10 last:border-none"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </div>
       </div>
+
+      <AdmissionForm open={admissionOpen} onClose={() => setAdmissionOpen(false)} />
     </header>
   );
 }
