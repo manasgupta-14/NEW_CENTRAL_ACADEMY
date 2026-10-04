@@ -1,6 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { SCHOOL } from "../../data/school";
+import SocialLinks from "../common/SocialLinks";
 
 const QUICK_LINKS = [
   { to: "/about", label: "About" },
@@ -27,6 +28,8 @@ function Footer() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               A place where young minds learn, grow and build a bright future with knowledge, discipline and values.
             </p>
+            <p className="mb-3 mt-6 text-sm font-medium tracking-wide text-paper-50">Follow us</p>
+            <SocialLinks />
           </div>
 
           <div>
