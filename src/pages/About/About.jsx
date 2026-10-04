@@ -3,6 +3,9 @@ import { SCHOOL } from "../../data/school";
 import PageHero from "../../components/common/PageHero";
 import Reveal from "../../components/common/Reveal";
 import Icon from "../../components/common/Icon";
+import { LEADERS } from "../../data/leadership";
+import LeaderMessage from "../../components/about/LeaderMessage";
+import VisionMission from "../../components/about/VisionMission";
 import WhyUsSection from "../../components/home/WhyUsSection";
 import ProgramsSection from "../../components/home/ProgramsSection";
 import AdmissionCTA from "../../components/home/AdmissionCTA";
@@ -54,6 +57,24 @@ function About() {
                 <cite className="mt-2 block text-sm not-italic text-ink-900/50">{SCHOOL.quote.by}</cite>
               </blockquote>
             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <VisionMission />
+
+      <section className="bg-paper-50">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <Reveal>
+            <p className="text-sm font-medium tracking-wide text-saffron-600">Our leadership</p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-navy-900 md:text-4xl">
+              The people who guide the school
+            </h2>
+          </Reveal>
+          <div className="mt-16 space-y-24">
+            {LEADERS.map((leader, i) => (
+              <LeaderMessage key={leader.key} leader={leader} flip={i % 2 === 1} />
+            ))}
           </div>
         </div>
       </section>
