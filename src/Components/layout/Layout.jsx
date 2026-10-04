@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
-import AdmissionProvider from "../../context/AdmissionProvider";
 import ScrollToTop from "../common/ScrollToTop";
 import ScrollProgress from "../common/ScrollProgress";
+import WhatsAppButton from "../common/WhatsAppButton";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
@@ -10,7 +10,7 @@ function Layout() {
   const { pathname } = useLocation();
 
   return (
-    <AdmissionProvider>
+    <>
       <ScrollToTop />
       <ScrollProgress />
       <Navbar />
@@ -19,7 +19,8 @@ function Layout() {
         <Outlet />
       </main>
       <Footer />
-    </AdmissionProvider>
+      <WhatsAppButton />
+    </>
   );
 }
 
