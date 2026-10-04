@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import heroImg from "../../assets/Hero.jpg";
 import { SCHOOL } from "../../data/school";
-import useAdmission from "../../hooks/useAdmission";
 import Button from "../common/Button";
 import Icon from "../common/Icon";
 import { ICONS } from "../../data/icons";
@@ -19,8 +18,6 @@ const dots = {
 const step = (n) => ({ animationDelay: `${n * 110}ms` });
 
 function HeroSection() {
-  const { openAdmission } = useAdmission();
-
   return (
     <section className="relative overflow-hidden bg-paper-50">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={dots} />
@@ -53,7 +50,7 @@ function HeroSection() {
             </p>
 
             <div className="mt-8 flex animate-hero-in flex-wrap gap-4" style={step(4)}>
-              <Button onClick={openAdmission}>Apply for admission</Button>
+              <Button to="/admissions">Apply for admission</Button>
               <Button variant="outline" to="/about">Explore school</Button>
             </div>
 
