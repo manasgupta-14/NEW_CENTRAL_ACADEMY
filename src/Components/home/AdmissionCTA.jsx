@@ -1,5 +1,4 @@
 import { SCHOOL } from "../../data/school";
-import useAdmission from "../../hooks/useAdmission";
 import Reveal from "../common/Reveal";
 import Button from "../common/Button";
 
@@ -12,8 +11,6 @@ const dots = {
 
 // Used on Home, About and Activities.
 function AdmissionCTA() {
-  const { openAdmission } = useAdmission();
-
   return (
     <section className="relative overflow-hidden bg-saffron-500">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={dots} />
@@ -31,7 +28,7 @@ function AdmissionCTA() {
               </p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-4">
-              <Button variant="dark" onClick={openAdmission} className="px-7 py-3.5">Apply for admission</Button>
+              <Button variant="dark" to="/admissions" className="px-7 py-3.5">Apply for admission</Button>
               <Button variant="darkOutline" href={`tel:${SCHOOL.phones[0].tel}`} className="px-7 py-3.5">
                 Call {SCHOOL.phones[0].label}
               </Button>
