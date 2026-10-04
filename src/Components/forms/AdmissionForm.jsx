@@ -1,36 +1,58 @@
 import { useState } from "react";
 import { CLASS_OPTIONS } from "../../data/values";
+import { SCHOOL } from "../../data/school";
+import { openWhatsApp } from "../../utils/whatsapp";
 import FormField from "./FormField";
 import SuccessState from "./SuccessState";
 import Button from "../common/Button";
 
 const EMPTY = { studentName: "", className: "", parentName: "", phone: "", email: "", message: "" };
 
-// Used inside the popup AND on the Admissions page.
-export default function AdmissionForm({ onDone }) {
+// What the school receives on WhatsApp.
+const buildMessage = (f) =>
+  [
+    `*New Admission Enquiry* - ${SCHOOL.name}`,
+    "",
+    `Student name: ${f.studentName}`,
+    `Class: ${f.className}`,
+    `Parent/Guardian: ${f.parentName}`,
+    `Phone: ${f.phone}`,
+    f.email ? `Email: ${f.email}` : null,
+    f.message ? `Message: ${f.message}` : null,
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+
+function AdmissionForm() {
   const [form, setForm] = useState(EMPTY);
-  const [submitted, setSubmitted] = useState(false);
+  const [waLink, setWaLink] = useState("");
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
+  // Submit opens WhatsApp with the enquiry already typed in. The person taps Send there.
   const handleSubmit = (e) => {
     e.preventDefault();
-    // No backend yet: show the confirmation. Connect your API here later.
-    setSubmitted(true);
+    setWaLink(openWhatsApp(buildMessage(form)));
   };
 
-  if (submitted) {
+  if (waLink) {
     return (
       <SuccessState
-        title={`Thank you, ${form.studentName || "there"}!`}
+        title={`Thank you, ${form.parentName || "there"}!`}
         action={
-          <Button onClick={() => { setForm(EMPTY); setSubmitted(false); onDone?.(); }}>
-            {onDone ? "Close" : "Send another enquiry"}
-          </Button>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Button variant="saffron" href={waLink} target="_blank" rel="noopener noreferrer">
+              Open WhatsApp again
+            </Button>
+            <Button variant="outline" onClick={() => { setForm(EMPTY); setWaLink(""); }}>
+              New enquiry
+            </Button>
+          </div>
         }
       >
-        We&rsquo;ve received your admission enquiry for {form.className || "your child"}. Our team will call you
-        on {form.phone || "your number"} shortly.
+        WhatsApp has opened with your enquiry for {form.studentName || "your child"} ({form.className}). Please tap{" "}
+        <strong className="font-semibold text-navy-900">Send</strong> there to share it with the school. If it did not
+        open, use the button below.
       </SuccessState>
     );
   }
@@ -50,7 +72,12 @@ export default function AdmissionForm({ onDone }) {
       </div>
       <FormField label="Email (optional)" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" />
       <FormField label="Message (optional)" as="textarea" name="message" rows={3} value={form.message} onChange={handleChange} placeholder="Anything you'd like us to know" />
-      <Button type="submit" className="mt-1 justify-self-start px-7">Submit enquiry</Button>
+      <Button type="submit" className="mt-1 justify-self-start px-7">Submit on WhatsApp</Button>
+      <p className="text-xs leading-relaxed text-ink-900/55">
+        Submitting opens WhatsApp with your details filled in. Tap Send there to reach the school.
+      </p>
     </form>
   );
 }
+
+export default AdmissionForm;
