@@ -11,5 +11,7 @@ export const SCHOOL = {
     { label: "9935217161", tel: "9935217161" },
     { label: "96213 23797", tel: "9621323797" },
   ],
+  // Number that receives WhatsApp messages (floating button, footer icon, admission and feedback forms).
+  whatsapp: "9555998119",
   quote: { text: "Arise, awake, and stop not till the goal is reached.", by: "Swami Vivekananda" },
 };
