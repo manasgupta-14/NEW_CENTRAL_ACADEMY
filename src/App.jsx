@@ -7,6 +7,8 @@ import Facilities from "./pages/Facilities/Facilities";
 import Admissions from "./pages/Admissions/Admissions";
 import Activities from "./pages/Activities/Activities";
 import Gallery from "./pages/Gallery/Gallery";
+import GalleryYear from "./pages/Gallery/GalleryYear";
+import GalleryEvent from "./pages/Gallery/GalleryEvent";
 import Notice from "./pages/Notice/Notice";
 import Fee from "./pages/Fee/Fee";
 import Attendance from "./pages/Attendance/Attendance";
@@ -28,6 +30,8 @@ function App() {
         <Route path="admissions" element={<Admissions />} />
         <Route path="activities" element={<Activities />} />
         <Route path="gallery" element={<Gallery />} />
+        <Route path="gallery/:year" element={<GalleryYear />} />
+        <Route path="gallery/:year/:eventId" element={<GalleryEvent />} />
         <Route path="notice" element={<Notice />} />
         <Route path="fee" element={<Fee />} />
         <Route path="attendance" element={<Attendance />} />

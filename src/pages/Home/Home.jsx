@@ -7,6 +7,7 @@ import FacilitiesSection from "../../components/home/FacilitiesSection";
 import GallerySection from "../../components/home/GallerySection";
 import MapSection from "../../components/home/MapSection";
 import ProgramsSection from "../../components/home/ProgramsSection";
+import FeedbackSection from "../../components/home/FeedbackSection";
 import AdmissionCTA from "../../components/home/AdmissionCTA";
 
 // Home = a stack of short teasers. Each one links to its own full page via the Navbar.
@@ -22,6 +23,7 @@ function Home() {
       <GallerySection />
       <MapSection />
       <ProgramsSection />
+      <FeedbackSection />
       <AdmissionCTA />
     </>
   );

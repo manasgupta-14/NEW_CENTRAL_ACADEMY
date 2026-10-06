@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { SCHOOL } from "../../data/school";
-import { openWhatsApp } from "../../utils/whatsapp";
+import { submitFeedback } from "../../utils/submit";
 import FormField from "./FormField";
 import SuccessState from "./SuccessState";
 import Button from "../common/Button";
@@ -8,20 +7,6 @@ import Button from "../common/Button";
 const STAR = "m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3Z";
 const RATING_WORDS = ["", "Poor", "Fair", "Good", "Very good", "Excellent"];
 const ABOUT = ["Teaching & classes", "Admission process", "Facilities", "Fees & office", "Safety & discipline", "Other"];
-// What the school receives on WhatsApp.
-const buildMessage = (f, rating) =>
-  [
-    `*New Feedback* - ${SCHOOL.name}`,
-    "",
-    `Name: ${f.name} (${f.relation})`,
-    f.phone ? `Phone: ${f.phone}` : null,
-    `About: ${f.about}`,
-    `Rating: ${rating}/5 (${RATING_WORDS[rating]})`,
-    `Feedback: ${f.message}`,
-  ]
-    .filter((line) => line !== null)
-    .join("\n");
-
 const EMPTY = { name: "", phone: "", relation: "", about: "", message: "" };
 
 function FeedbackForm() {
@@ -29,43 +14,46 @@ function FeedbackForm() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showError, setShowError] = useState(false);
-  const [waLink, setWaLink] = useState("");
+  const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  // Feedback is NOT sent to WhatsApp. See utils/submit.js for where it goes.
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!rating) {
       setShowError(true);
       return;
     }
-    // Opens WhatsApp with the feedback already typed in. The person taps Send there.
-    setWaLink(openWhatsApp(buildMessage(form, rating)));
+    setSending(true);
+    setError("");
+    try {
+      await submitFeedback({ ...form, rating, ratingLabel: RATING_WORDS[rating] });
+      setDone(true);
+    } catch {
+      setError("Could not submit right now. Please check your internet and try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const reset = () => {
     setForm(EMPTY);
     setRating(0);
     setShowError(false);
-    setWaLink("");
+    setDone(false);
+    setError("");
   };
 
-  if (waLink) {
+  if (done) {
     return (
       <SuccessState
         title={`Thank you, ${form.name || "there"}!`}
-        action={
-          <div className="flex flex-wrap justify-center gap-3">
-            <Button variant="saffron" href={waLink} target="_blank" rel="noopener noreferrer">
-              Open WhatsApp again
-            </Button>
-            <Button variant="outline" onClick={reset}>Share more feedback</Button>
-          </div>
-        }
+        action={<Button variant="outline" onClick={reset}>Share more feedback</Button>}
       >
-        WhatsApp has opened with your feedback. Please tap{" "}
-        <strong className="font-semibold text-navy-900">Send</strong> there to share it with the school. If it did not
-        open, use the button below.
+        Your feedback has been received. It helps us make the school better.
       </SuccessState>
     );
   }
@@ -117,10 +105,10 @@ function FeedbackForm() {
       </div>
 
       <FormField label="Your feedback" as="textarea" name="message" rows={4} required value={form.message} onChange={handleChange} placeholder="Tell us what went well and what we can improve" />
-      <Button type="submit" className="mt-1 justify-self-start px-7">Submit on WhatsApp</Button>
-      <p className="text-xs leading-relaxed text-ink-900/55">
-        Submitting opens WhatsApp with your feedback filled in. Tap Send there to reach the school.
-      </p>
+      {error && <p role="alert" className="text-sm text-maroon-700">{error}</p>}
+      <Button type="submit" disabled={sending} className="mt-1 justify-self-start px-7 disabled:opacity-60">
+        {sending ? "Submitting..." : "Submit feedback"}
+      </Button>
     </form>
   );
 }
