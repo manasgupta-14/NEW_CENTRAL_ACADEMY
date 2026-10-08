@@ -6,13 +6,14 @@ import Reveal from "../common/Reveal";
 import Button from "../common/Button";
 import Icon from "../common/Icon";
 import FormField from "./FormField";
-import SuccessState from "./SuccessState";
+import { api } from "../../utils/api";
 
-// Shared layout for Fee / Attendance / Result. Online records aren't connected yet,
-// so submitting shows an honest "ask the office" message instead of fake data.
-function PortalLookup({ title, intro, icon, fields, submitLabel, help }) {
+// Shared layout for Fee / Attendance / Result. Data backend se aata hai: POST /api/portal/<endpoint>.
+function PortalLookup({ title, intro, icon, fields, submitLabel, help, endpoint, renderData }) {
   const [values, setValues] = useState({});
-  const [sent, setSent] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onChange = (e) => setValues((v) => ({ ...v, [e.target.name]: e.target.value }));
 
@@ -26,18 +27,28 @@ function PortalLookup({ title, intro, icon, fields, submitLabel, help }) {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-navy-900 text-paper-50">
                 <Icon d={icon} />
               </div>
-              {sent ? (
-                <SuccessState
-                  title="Online records are being set up"
-                  action={<Button variant="outline" onClick={() => setSent(false)}>Search again</Button>}
-                >
-                  We couldn&rsquo;t fetch details for {values.admissionNo || "this admission number"} online yet.
-                  Please call the school office on {SCHOOL.phones[0].label} and we&rsquo;ll help right away.
-                </SuccessState>
+              {data ? (
+                <div className="mt-6 animate-pop">
+                  <h2 className="font-display text-xl font-semibold text-navy-900">{data.student.name}</h2>
+                  <p className="text-sm text-ink-900/60">{data.student.className} &middot; {data.student.studentId}</p>
+                  <div className="mt-5">{renderData(data)}</div>
+                  <Button variant="outline" className="mt-6" onClick={() => setData(null)}>Search again</Button>
+                </div>
               ) : (
                 <form
                   className="mt-6 grid gap-4"
-                  onSubmit={(e) => { e.preventDefault(); setSent(true); }}
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setLoading(true);
+                    setError("");
+                    try {
+                      setData(await api(`/portal/${endpoint}`, { method: "POST", body: values }));
+                    } catch (err) {
+                      setError(err.message);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
                 >
                   {fields.map((f) => (
                     <FormField key={f.name} {...f} required value={values[f.name] ?? ""} onChange={onChange}>
@@ -49,7 +60,8 @@ function PortalLookup({ title, intro, icon, fields, submitLabel, help }) {
                       )}
                     </FormField>
                   ))}
-                  <Button type="submit" className="mt-1 justify-self-start px-7">{submitLabel}</Button>
+                  {error && <p role="alert" className="text-sm text-maroon-700">{error}</p>}
+                  <Button type="submit" disabled={loading} className="mt-1 justify-self-start px-7 disabled:opacity-60">{loading ? "Please wait..." : submitLabel}</Button>
                 </form>
               )}
             </div>
