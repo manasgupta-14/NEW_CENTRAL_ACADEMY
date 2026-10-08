@@ -8,6 +8,7 @@ import Icon from "../../components/common/Icon";
 import FormField from "../../components/forms/FormField";
 import SuccessState from "../../components/forms/SuccessState";
 import MapSection from "../../components/home/MapSection";
+import FeedbackSlider from "../../components/contact/FeedbackSlider";
 
 const EMPTY = { name: "", phone: "", message: "" };
 
@@ -73,6 +74,9 @@ function Contact() {
       </section>
 
       <MapSection heading={false} />
+
+      {/* Footer ke theek upar: sirf manager ke active kiye hue feedback */}
+      <FeedbackSlider />
     </>
   );
 }
