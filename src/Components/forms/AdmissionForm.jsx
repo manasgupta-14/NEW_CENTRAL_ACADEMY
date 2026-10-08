@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CLASS_OPTIONS } from "../../data/values";
 import { SCHOOL } from "../../data/school";
 import { openWhatsApp } from "../../utils/whatsapp";
+import { submitAdmission } from "../../utils/submit";
 import FormField from "./FormField";
 import SuccessState from "./SuccessState";
 import Button from "../common/Button";
@@ -29,9 +30,15 @@ function AdmissionForm() {
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  // Submit opens WhatsApp with the enquiry already typed in. The person taps Send there.
-  const handleSubmit = (e) => {
+  // Enquiry pehle database me save hoti hai, phir WhatsApp khulta hai (tap Send there).
+  // Agar server band ho to bhi WhatsApp khul jata hai, enquiry kho nahi jaati.
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      await submitAdmission(form);
+    } catch {
+      /* server down: WhatsApp fallback neeche */
+    }
     setWaLink(openWhatsApp(buildMessage(form)));
   };
 
