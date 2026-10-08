@@ -10,6 +10,7 @@ import StudentsPage from "./pages/StudentsPage";
 import FeesPage from "./pages/FeesPage";
 import AdminsPage from "./pages/AdminsPage";
 import AttendancePage from "./pages/AttendancePage";
+import FeedbackPage from "./pages/FeedbackPage";
 import ProfilePage from "./pages/ProfilePage";
 
 // Entry point: App.jsx me sirf <Route path="manager/*" element={<ManagerDashboard />} /> lagta hai.
@@ -29,6 +30,7 @@ export default function ManagerDashboard() {
           <Route path="students" element={<StudentsPage key="current" />} />
           <Route path="passed-out-students" element={<StudentsPage key="passed-out" passedOut />} />
           <Route path="fees" element={<FeesPage />} />
+          <Route path="feedback" element={<FeedbackPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
         </Route>

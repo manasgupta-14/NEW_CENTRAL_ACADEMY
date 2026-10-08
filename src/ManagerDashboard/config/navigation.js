@@ -1,4 +1,4 @@
-import { LayoutDashboard, GraduationCap, BriefcaseBusiness, History, ShieldCheck, Users, IndianRupee, UserCog, CalendarCheck, UserRound } from "lucide-react";
+import { LayoutDashboard, GraduationCap, BriefcaseBusiness, History, ShieldCheck, Users, IndianRupee, UserCog, CalendarCheck, UserRound, MessageSquareText } from "lucide-react";
 
 export const BASE_PATH = "/manager";
 
@@ -13,5 +13,6 @@ export const NAV_ITEMS = [
   { to: `${BASE_PATH}/passed-out-students`, label: "Passed Out Students", icon: GraduationCap },
   { to: `${BASE_PATH}/attendance`, label: "Attendance", icon: CalendarCheck },
   { to: `${BASE_PATH}/fees`, label: "Fees", icon: IndianRupee },
+  { to: `${BASE_PATH}/feedback`, label: "Feedback", icon: MessageSquareText },
   { to: `${BASE_PATH}/profile`, label: "My Profile", icon: UserRound },
 ];

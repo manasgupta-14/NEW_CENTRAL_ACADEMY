@@ -29,7 +29,7 @@ export const ACCOUNTS = {
   manager: {
     label: "Manager",
     login: [EMAIL, PASSWORD],
-    forgot: [EMAIL],
+    forgot: [], // Manager ko email nahi daalni: link database wale email par apne aap jaata hai
   },
 };
 

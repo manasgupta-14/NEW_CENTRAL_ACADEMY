@@ -15,3 +15,6 @@ export function submitApplication(fields, resume) {
 }
 
 export const submitAdmission = (fields) => api("/admissions", { method: "POST", body: fields });
+
+// Contact page ke slider ke liye: sirf manager ne jo feedback Active kiya hai wahi aata hai.
+export const fetchActiveFeedback = () => api("/testimonials");
