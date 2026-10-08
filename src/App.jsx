@@ -32,6 +32,7 @@ import Career from "./pages/Career/Career";
 import Help from "./pages/Help/Help";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import NotFound from "./pages/NotFound/NotFound";
 import ManagerDashboard from "./ManagerDashboard/ManagerDashboard";
 
@@ -74,6 +75,7 @@ function App() {
         <Route path="help" element={<Help />} />
         <Route path="contact" element={<Contact />} />
         <Route path="login" element={<Login />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
