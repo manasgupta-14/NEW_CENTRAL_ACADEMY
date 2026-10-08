@@ -33,6 +33,10 @@ export const managerApi = {
   profile: () => get("/profile"),
   updateProfile: (body) => send("PATCH", "/profile", body),
 
+  // feedback: status = "all" | "active" | "inactive". Active wala hi website par dikhta hai.
+  feedback: (status) => get(`/feedback?status=${status}`),
+  setFeedbackActive: (id, isActive) => send("PATCH", `/feedback/${id}/active`, { isActive }),
+
   admins: () => get("/admins"),
   addAdmin: (body) => send("POST", "/admins", body),
   deleteAdmin: (id) => send("DELETE", `/admins/${id}`),

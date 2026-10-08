@@ -15,10 +15,10 @@ const STYLES = {
   unmarked: "bg-slate-50 text-slate-500 border-slate-200",
 };
 
-export default function StatusBadge({ status }) {
+export default function StatusBadge({ status, label }) {
   return (
     <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold ${STYLES[status] || "bg-gray-50 text-gray-700 border-gray-200"}`}>
-      {STATUS_LABELS[status] || status}
+      {label || STATUS_LABELS[status] || status}
     </span>
   );
 }
