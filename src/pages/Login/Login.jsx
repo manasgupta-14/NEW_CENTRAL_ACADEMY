@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { SCHOOL } from "../../data/school";
 import { ACCOUNTS, MANAGEMENT_ROLES } from "../../data/loginAccounts";
 import Button from "../../components/common/Button";
 import FormField from "../../components/forms/FormField";
 import SuccessState from "../../components/forms/SuccessState";
+import { api, setToken } from "../../utils/api";
 
 const AUDIENCES = [
   { key: "student", label: "Student" },
@@ -23,28 +24,53 @@ const linkBtn =
   "text-sm font-medium text-navy-900 underline-offset-4 transition-colors hover:text-saffron-600 hover:underline";
 
 function Login() {
+  const navigate = useNavigate();
   const [audience, setAudience] = useState("student");
   const [mgmtRole, setMgmtRole] = useState("teacher");
   // "login" | "forgot" | "login-done" | "forgot-done"
   const [view, setView] = useState("login");
   const [who, setWho] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [session, setSession] = useState(null);
 
   const accountKey = audience === "student" ? "student" : mgmtRole;
   const account = ACCOUNTS[accountKey];
   const isStudent = audience === "student";
 
   const switchAudience = (key) => {
+    setError("");
     setAudience(key);
     setView("login");
   };
   const backToLogin = () => setView("login");
 
-  // Reads the first value the person typed (ID, name or email) for the confirmation text.
-  const submit = (next) => (e) => {
+  // Form ke saare fields backend ko bhejta hai: POST /api/auth/login ya /api/auth/forgot
+  const submit = (next) => async (e) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    setWho(data.get("id") || data.get("fullName") || data.get("email") || "");
-    setView(next);
+    const body = { role: accountKey, ...Object.fromEntries(new FormData(e.currentTarget)) };
+    body.role = accountKey;
+    setBusy(true);
+    setError("");
+    try {
+      if (next === "login-done") {
+        const res = await api("/auth/login", { method: "POST", body });
+        setToken(res.token);
+        if (res.role === "manager") {
+          navigate("/manager", { replace: true }); // manager seedha dashboard par jaata hai
+          return;
+        }
+        setSession(res);
+      } else {
+        await api("/auth/forgot", { method: "POST", body });
+      }
+      setWho(body.id || body.fullName || body.email || "");
+      setView(next);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const renderFields = (fields) =>
@@ -127,7 +153,8 @@ function Login() {
                       </button>
                     </div>
                   </div>
-                  <Button type="submit" className="w-full">Login</Button>
+                  {error && <p role="alert" className="text-sm text-maroon-700">{error}</p>}
+                  <Button type="submit" disabled={busy} className="w-full disabled:opacity-60">{busy ? "Please wait..." : "Login"}</Button>
                 </form>
               </div>
             )}
@@ -150,7 +177,8 @@ function Login() {
                     </FormField>
                   )}
                   {renderFields(account.forgot)}
-                  <Button type="submit" className="w-full">Send reset request</Button>
+                  {error && <p role="alert" className="text-sm text-maroon-700">{error}</p>}
+                  <Button type="submit" disabled={busy} className="w-full disabled:opacity-60">{busy ? "Please wait..." : "Send reset request"}</Button>
                 </form>
                 <button type="button" onClick={backToLogin} className={`${linkBtn} mt-5 block w-full text-center`}>
                   Back to login
@@ -160,10 +188,10 @@ function Login() {
 
             {view === "login-done" && (
               <SuccessState
-                title="Login is not open yet"
-                action={<Button variant="outline" onClick={backToLogin}>Back</Button>}
+                title={`Welcome, ${session?.user?.name || session?.user?.fullName || who}!`}
+                action={<Button variant="outline" onClick={() => { setToken(null); setSession(null); backToLogin(); }}>Logout</Button>}
               >
-                Online accounts are being set up. Until then, please call the school office on {SCHOOL.phones[0].label}.
+                You are signed in as {ACCOUNTS[accountKey].label}.
               </SuccessState>
             )}
 
