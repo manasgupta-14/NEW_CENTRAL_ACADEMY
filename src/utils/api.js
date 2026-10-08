@@ -1,6 +1,6 @@
 // Backend se baat karne ka ek hi jagah. Server ka address .env me VITE_API_URL se aata hai.
-// Local: VITE_API_URL=http://localhost:5000/api
-const BASE = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").replace(/\/$/, "");
+// Live: VITE_API_URL=https://backend-school-1-9s88.onrender.com/api
+const BASE = (import.meta.env.VITE_API_URL || "https://backend-school-1-9s88.onrender.com/api").replace(/\/$/, "");
 
 const TOKEN_KEY = "nca-token";
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
