@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { SCHOOL } from "../../data/school";
 import { ACCOUNTS, MANAGEMENT_ROLES } from "../../data/loginAccounts";
@@ -20,18 +20,14 @@ const dots = {
   maskImage: "radial-gradient(ellipse 80% 70% at 100% 0%, black, transparent)",
 };
 
-const MAIL_SENDER = "newcentralacademy.12345@gmail.com";
-
 const linkBtn =
   "text-sm font-medium text-navy-900 underline-offset-4 transition-colors hover:text-saffron-600 hover:underline";
 
 function Login() {
   const navigate = useNavigate();
-  // Reset-password page se password badal kar aaye ho to seedha Management > Manager login dikhao
-  const justReset = Boolean(useLocation().state?.passwordReset);
-  const [audience, setAudience] = useState(justReset ? "management" : "student");
-  const [mgmtRole, setMgmtRole] = useState(justReset ? "manager" : "teacher");
-  // "login" | "forgot" | "login-done" | "forgot-done"
+  const [audience, setAudience] = useState("student");
+  const [mgmtRole, setMgmtRole] = useState("teacher");
+  // "login" | "forgot" | "login-done"
   const [view, setView] = useState("login");
   const [who, setWho] = useState("");
   const [busy, setBusy] = useState(false);
@@ -49,22 +45,7 @@ function Login() {
   };
   const backToLogin = () => setView("login");
 
-  // Manager: email type nahi karni. Ek click par database wale Manager email par reset link chala jaata hai.
-  const sendManagerLink = async () => {
-    setBusy(true);
-    setError("");
-    try {
-      const res = await api("/auth/forgot", { method: "POST", body: { role: "manager" } });
-      setWho((res.sentTo || []).join(", "));
-      setView("forgot-done");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  // Form ke saare fields backend ko bhejta hai: POST /api/auth/login ya /api/auth/forgot
+  // Form ke saare fields backend ko bhejta hai: POST /api/auth/login
   const submit = (next) => async (e) => {
     e.preventDefault();
     const body = { role: accountKey, ...Object.fromEntries(new FormData(e.currentTarget)) };
@@ -80,8 +61,6 @@ function Login() {
           return;
         }
         setSession(res);
-      } else {
-        await api("/auth/forgot", { method: "POST", body });
       }
       setWho(body.id || body.fullName || body.email || "");
       setView(next);
@@ -155,12 +134,6 @@ function Login() {
                   {isStudent ? "Sign in with your student ID and password." : "Choose your role and sign in."}
                 </p>
 
-                {justReset && (
-                  <p role="status" className="mt-4 rounded-xl bg-saffron-100 px-4 py-3 text-sm text-navy-900">
-                    Your password has been changed. Please log in with the new password.
-                  </p>
-                )}
-
                 <form className="mt-6 grid gap-5" onSubmit={submit("login-done")}>
                   {!isStudent && (
                     <FormField label="Role" as="select" name="role" value={mgmtRole} onChange={(e) => setMgmtRole(e.target.value)}>
@@ -173,13 +146,8 @@ function Login() {
                   <div>
                     {renderFields(account.login.filter((f) => f.name === "password"))}
                     <div className="mt-2 text-right">
-                      <button
-                        type="button"
-                        disabled={busy}
-                        onClick={accountKey === "manager" ? sendManagerLink : () => setView("forgot")}
-                        className={`${linkBtn} disabled:opacity-60`}
-                      >
-                        {busy && accountKey === "manager" ? "Sending reset link..." : "Forgot password?"}
+                      <button type="button" onClick={() => setView("forgot")} className={linkBtn}>
+                        Forgot password?
                       </button>
                     </div>
                   </div>
@@ -190,26 +158,11 @@ function Login() {
             )}
 
             {view === "forgot" && (
-              <div key={`forgot-${accountKey}`} className="animate-pop">
-                <h2 className="font-display text-2xl font-semibold text-navy-900 md:text-3xl">Reset your password</h2>
-                <p className="mt-2 text-sm leading-relaxed text-ink-900/60">
-                  {accountKey === "manager"
-                    ? "A password reset link will be sent to the email address registered for the Manager account."
-                    : `${account.forgot.map((f) => f.label.toLowerCase()).join(" and ").replace(/^./, (c) => `Enter your ${c}`)}.`}
+              <div key="forgot" className="animate-pop">
+                <h2 className="font-display text-2xl font-semibold text-navy-900 md:text-3xl">Forgot password</h2>
+                <p role="status" className="mt-4 rounded-xl bg-paper-100 px-4 py-3 text-sm leading-relaxed text-navy-900">
+                  Password reset is currently unavailable. Please contact the school office on {SCHOOL.phones[0].label}.
                 </p>
-
-                <form className="mt-6 grid gap-5" onSubmit={accountKey === "manager" ? (e) => { e.preventDefault(); sendManagerLink(); } : submit("forgot-done")}>
-                  {!isStudent && (
-                    <FormField label="Role" as="select" name="role" value={mgmtRole} onChange={(e) => setMgmtRole(e.target.value)}>
-                      {MANAGEMENT_ROLES.map((r) => (
-                        <option key={r} value={r}>{ACCOUNTS[r].label}</option>
-                      ))}
-                    </FormField>
-                  )}
-                  {accountKey !== "manager" && renderFields(account.forgot)}
-                  {error && <p role="alert" className="text-sm text-maroon-700">{error}</p>}
-                  <Button type="submit" disabled={busy} className="w-full disabled:opacity-60">{busy ? "Please wait..." : accountKey === "manager" ? "Send reset link" : "Send reset request"}</Button>
-                </form>
                 <button type="button" onClick={backToLogin} className={`${linkBtn} mt-5 block w-full text-center`}>
                   Back to login
                 </button>
@@ -222,25 +175,6 @@ function Login() {
                 action={<Button variant="outline" onClick={() => { setToken(null); setSession(null); backToLogin(); }}>Logout</Button>}
               >
                 You are signed in as {ACCOUNTS[accountKey].label}.
-              </SuccessState>
-            )}
-
-            {view === "forgot-done" && (
-              <SuccessState
-                title={accountKey === "manager" ? "Check your email" : "Request received"}
-                action={<Button variant="outline" onClick={backToLogin}>Back to login</Button>}
-              >
-                {accountKey === "manager" ? (
-                  <>
-                    A password reset link has been sent to {who || "the registered Manager email"} from {MAIL_SENDER}. The link works for
-                    30 minutes. It should arrive within a minute; if not, check the Spam folder once.
-                  </>
-                ) : (
-                  <>
-                    We&rsquo;ve noted the reset request for {who || "your account"}. The school office will contact you, or
-                    you can call {SCHOOL.phones[0].label}.
-                  </>
-                )}
               </SuccessState>
             )}
           </div>
