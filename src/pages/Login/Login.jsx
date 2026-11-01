@@ -60,6 +60,10 @@ function Login() {
           navigate("/manager", { replace: true }); // manager seedha dashboard par jaata hai
           return;
         }
+        if (res.role === "principal") {
+          navigate("/manager/subjects", { replace: true }); // principal ko Subjects / Teacher Assignments wala panel milta hai
+          return;
+        }
         setSession(res);
       }
       setWho(body.id || body.fullName || body.email || "");

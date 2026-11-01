@@ -30,7 +30,7 @@ export default function StaffHistoryCard({ person, onView }) {
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <Field label="Category" value={person.category} />
         <Field label="Joining Date" value={formatDate(person.joiningDate)} />
-        <Field label="Leaving Date" value={formatDate(person.leavingDate)} />
+        <Field label={person.status === "inactive" ? "Deactivated On" : "Leaving Date"} value={formatDate(person.leavingDate)} />
         <Field label="Reason" value={person.leavingReason} />
       </div>
 

@@ -25,6 +25,7 @@ export function experienceFrom(joining, until) {
 
 export const STATUS_LABELS = {
   active: "Active",
+  inactive: "Deactivated",
   resigned: "Resigned",
   terminated: "Terminated",
   current: "Current",

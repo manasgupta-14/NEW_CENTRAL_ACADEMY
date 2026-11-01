@@ -6,18 +6,23 @@ const JOINING = { name: "joiningDate", label: "Joining Date", type: "date" };
 const SALARY = { name: "salary", label: "Monthly Salary", type: "number", min: 0, placeholder: "e.g. 40000" };
 const PASSWORD = { name: "password", label: "Login Password", type: "password", minLength: 8, placeholder: "Minimum 8 characters", autoComplete: "new-password" };
 
-export const STAFF_FORM = {
-  teaching: [
+// Teaching staff ka form. Subject ab dropdown hai jo Subjects page ki list se bharta hai (subjectNames).
+// editing = true ho to password optional hota hai (khaali chhodo to purana password rehta hai).
+export function teachingForm(subjectNames, editing = false) {
+  return [
     NAME,
     { name: "teacherId", label: "Teacher ID", placeholder: "e.g. NCA-T01" },
-    { name: "subject", label: "Subject", placeholder: "e.g. Mathematics" },
+    { name: "subject", label: "Subject", options: subjectNames.map((s) => ({ value: s, label: s })) },
     QUALIFICATION,
     PHONE,
     { name: "email", label: "Email", type: "email", placeholder: "teacher@example.com" },
     JOINING,
     SALARY,
-    PASSWORD,
-  ],
+    editing ? { ...PASSWORD, label: "New Password (optional)", optional: true, placeholder: "Leave blank to keep the current password" } : PASSWORD,
+  ];
+}
+
+export const STAFF_FORM = {
   "non-teaching": [
     NAME,
     { name: "role", label: "Role", placeholder: "e.g. Accountant, Driver" },

@@ -9,8 +9,22 @@ export const managerApi = {
 
   staff: (type) => get(`/staff/${type}`),
   addStaff: (type, body) => send("POST", `/staff/${type}`, body),
+  editStaff: (type, id, body) => send("PATCH", `/staff/${type}/${id}`, body),
   setStaffStatus: (type, id, body) => send("PATCH", `/staff/${type}/${id}/status`, body),
   staffHistory: () => get("/staff-history"),
+
+  // Teacher ko class teacher / subject dena (/api/teacher-assignments)
+  teacherAssignments: () => api("/teacher-assignments", { auth: true }),
+  assignClassTeacher: (className, teacherId) => api("/teacher-assignments/class-teacher", { method: "POST", body: { className, teacherId }, auth: true }),
+  removeClassTeacher: (className) => api(`/teacher-assignments/class-teacher/${encodeURIComponent(className)}`, { method: "DELETE", auth: true }),
+  assignSubject: (className, subjectId, teacherId) => api("/teacher-assignments/subjects", { method: "POST", body: { className, subjectId, teacherId }, auth: true }),
+  unassignSubject: (assignmentId) => api(`/teacher-assignments/subjects/${assignmentId}`, { method: "DELETE", auth: true }),
+
+  // Subject master list (/api/subjects): Principal aur Manager dono add / edit / delete kar sakte hain
+  subjects: () => api("/subjects", { auth: true }),
+  addSubject: (body) => api("/subjects", { method: "POST", body, auth: true }),
+  editSubject: (id, body) => api(`/subjects/${id}`, { method: "PATCH", body, auth: true }),
+  deleteSubject: (id) => api(`/subjects/${id}?force=true`, { method: "DELETE", auth: true }),
 
   principals: () => get("/principals"),
   addPrincipal: (body) => send("POST", "/principals", body),

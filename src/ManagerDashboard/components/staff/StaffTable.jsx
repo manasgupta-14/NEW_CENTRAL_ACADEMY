@@ -1,4 +1,4 @@
-import { Eye } from "lucide-react";
+import { Eye, Pencil, UserX } from "lucide-react";
 import Avatar from "../common/Avatar";
 import StatusBadge from "../common/StatusBadge";
 import EmptyState from "../common/EmptyState";
@@ -7,7 +7,8 @@ import { formatCurrency } from "../../utils/format";
 
 const TH = "px-5 py-4 text-left text-xs font-semibold uppercase text-slate-500";
 
-export default function StaffTable({ data, type, onView, emptyMessage, emptyAction }) {
+// onEdit / onDeactivate sirf teaching staff ke liye aate hain (active teacher par).
+export default function StaffTable({ data, type, onView, onEdit, onDeactivate, emptyMessage, emptyAction }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="overflow-x-auto">
@@ -38,14 +39,34 @@ export default function StaffTable({ data, type, onView, emptyMessage, emptyActi
                 <td className="px-5 py-4 text-sm text-slate-600">{person.qualification || "—"}</td>
                 <td className="px-5 py-4 font-semibold text-slate-800">{formatCurrency(person.salary)}</td>
                 <td className="px-5 py-4"><StatusBadge status={person.status} /></td>
-                <td className="px-5 py-4 text-right">
-                  <button
-                    onClick={() => onView(person)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-blue-100 hover:text-blue-700"
-                  >
-                    <Eye size={15} />
-                    View
-                  </button>
+                <td className="px-5 py-4">
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => onView(person)}
+                      className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-blue-100 hover:text-blue-700"
+                    >
+                      <Eye size={15} />
+                      View
+                    </button>
+                    {onEdit && (
+                      <button
+                        onClick={() => onEdit(person)}
+                        className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-blue-100 hover:text-blue-700"
+                      >
+                        <Pencil size={14} />
+                        Edit
+                      </button>
+                    )}
+                    {onDeactivate && person.status === "active" && (
+                      <button
+                        onClick={() => onDeactivate(person)}
+                        className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-100"
+                      >
+                        <UserX size={14} />
+                        Deactivate
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

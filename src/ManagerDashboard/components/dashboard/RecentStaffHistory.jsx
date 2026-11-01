@@ -10,7 +10,7 @@ export default function RecentStaffHistory({ items }) {
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h2 className="font-bold text-slate-900">Staff History</h2>
-          <p className="text-sm text-slate-500">Resigned and terminated staff</p>
+          <p className="text-sm text-slate-500">Deactivated, resigned and terminated staff</p>
         </div>
         <History className="text-amber-600" />
       </div>

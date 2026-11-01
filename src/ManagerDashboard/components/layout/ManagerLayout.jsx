@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import { useManagerSession } from "../../hooks/useManagerSession";
 
 // Sidebar + Topbar + page. School ka Navbar/Footer yahan nahi aata (route Layout ke bahar hai).
 export default function ManagerLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { role } = useManagerSession();
 
   useEffect(() => {
     const previous = document.title;
-    document.title = "Manager Dashboard | New Central Academy";
+    document.title = `${role === "principal" ? "Principal" : "Manager"} Dashboard | New Central Academy`;
     return () => {
       document.title = previous;
     };
-  }, []);
+  }, [role]);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { History, UserX, XCircle } from "lucide-react";
+import { History, UserMinus, UserX, XCircle } from "lucide-react";
 import { managerApi } from "../api/managerApi";
 import { useManagerData } from "../hooks/useManagerData";
 import { matchesQuery } from "../utils/format";
@@ -23,10 +23,11 @@ export default function StaffHistoryPage() {
 
   return (
     <>
-      <PageHeader title="Staff History" subtitle="Complete history of resigned and terminated staff." />
+      <PageHeader title="Staff History" subtitle="Deactivated, resigned and terminated staff. Open a deactivated teacher to reactivate them." />
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Total History" value={history.length} icon={History} iconBg="bg-slate-100 text-slate-600" />
+        <StatCard title="Deactivated" value={history.filter((p) => p.status === "inactive").length} icon={UserMinus} iconBg="bg-blue-100 text-blue-600" />
         <StatCard title="Resigned" value={history.filter((p) => p.status === "resigned").length} icon={UserX} iconBg="bg-amber-100 text-amber-600" />
         <StatCard title="Terminated" value={history.filter((p) => p.status === "terminated").length} icon={XCircle} iconBg="bg-red-100 text-red-600" />
       </div>
@@ -35,7 +36,7 @@ export default function StaffHistoryPage() {
 
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <EmptyState message={history.length === 0 ? "No staff has resigned or been terminated." : "No staff found."} />
+          <EmptyState message={history.length === 0 ? "No staff has been deactivated, resigned or terminated." : "No staff found."} />
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">

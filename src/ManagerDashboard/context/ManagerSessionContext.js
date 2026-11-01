@@ -1,4 +1,4 @@
 import { createContext } from "react";
 
-// { user, logout, updateUser } — ManagerSessionProvider bharta hai
+// { user, role, displayName, logout, updateUser } — ManagerSessionProvider bharta hai
 export const ManagerSessionContext = createContext(null);
