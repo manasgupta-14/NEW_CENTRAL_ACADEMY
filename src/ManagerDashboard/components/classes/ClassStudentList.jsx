@@ -6,7 +6,7 @@ import EmptyState from "../common/EmptyState";
 import ActionButton from "../common/ActionButton";
 import { matchesQuery } from "../../utils/format";
 
-// Ek class ke students ki list. `renderMeta(student)` se right side ka data aata hai (fee, status, etc.).
+// Ek class ke students ki list. onBack na do to "All Classes" button nahi dikhta. `renderMeta(student)` se right side ka data aata hai (fee, status, etc.).
 export default function ClassStudentList({ className, students, onBack, onOpen, renderMeta, emptyMessage, action }) {
   const [search, setSearch] = useState("");
   const shown = students.filter((s) => matchesQuery(search, s.name, s.rollNo, s.studentId, s.fatherName));
@@ -14,7 +14,7 @@ export default function ClassStudentList({ className, students, onBack, onOpen, 
   return (
     <>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <ActionButton variant="outline" icon={ArrowLeft} onClick={onBack}>All Classes</ActionButton>
+        {onBack ? <ActionButton variant="outline" icon={ArrowLeft} onClick={onBack}>All Classes</ActionButton> : <span />}
         {action}
       </div>
 

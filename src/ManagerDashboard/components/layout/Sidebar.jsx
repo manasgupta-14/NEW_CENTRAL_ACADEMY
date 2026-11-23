@@ -2,7 +2,6 @@ import { Link, NavLink } from "react-router-dom";
 import { ChevronRight, ExternalLink, LogOut, X } from "lucide-react";
 import logo from "../../../assets/logo.png";
 import { SCHOOL } from "../../../data/school";
-import { NAV_ITEMS } from "../../config/navigation";
 import { useManagerSession } from "../../hooks/useManagerSession";
 import Avatar from "../common/Avatar";
 
@@ -11,10 +10,9 @@ const linkClass = ({ isActive }) =>
     isActive ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
   }`;
 
-export default function Sidebar({ open, onClose }) {
-  const { user, role, displayName, logout } = useManagerSession();
-  const isPrincipal = role === "principal";
-  const items = isPrincipal ? NAV_ITEMS.filter((i) => i.principalToo) : NAV_ITEMS;
+// panel = { label, roleLabel, nav } (Manager / Principal / Teacher teeno ka sidebar yahi hai)
+export default function Sidebar({ panel, open, onClose }) {
+  const { user, displayName, logout } = useManagerSession();
 
   return (
     <aside
@@ -27,7 +25,7 @@ export default function Sidebar({ open, onClose }) {
           <img src={logo} alt="" className="h-11 w-11 object-contain" />
           <div className="min-w-0">
             <p className="truncate text-sm font-bold leading-tight text-slate-900">{SCHOOL.name}</p>
-            <p className="text-xs text-slate-500">{isPrincipal ? "Principal Panel" : "Manager Panel"}</p>
+            <p className="text-xs text-slate-500">{panel.label}</p>
           </div>
         </Link>
         <button onClick={onClose} aria-label="Close menu" className="rounded-lg p-2 hover:bg-slate-100 lg:hidden">
@@ -37,8 +35,8 @@ export default function Sidebar({ open, onClose }) {
 
       <div className="flex-1 overflow-y-auto px-3 py-5">
         <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">Main Menu</p>
-        <nav className="space-y-1" aria-label={isPrincipal ? "Principal menu" : "Manager menu"}>
-          {items.map(({ to, label, icon: Icon, end }) => (
+        <nav className="space-y-1" aria-label={`${panel.roleLabel} menu`}>
+          {panel.nav.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} onClick={onClose} className={linkClass}>
               {({ isActive }) => (
                 <>
@@ -61,7 +59,7 @@ export default function Sidebar({ open, onClose }) {
         <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
           <Avatar name={displayName} />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-bold">{displayName || (isPrincipal ? "Principal" : "Manager")}</p>
+            <p className="truncate text-sm font-bold">{displayName || panel.roleLabel}</p>
             <p className="truncate text-xs text-slate-500">{user?.email}</p>
           </div>
           <button onClick={logout} aria-label="Logout" title="Logout" className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600">

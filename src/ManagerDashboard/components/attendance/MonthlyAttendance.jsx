@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CalendarX, CheckCircle2, ChevronLeft, ChevronRight, Percent, XCircle } from "lucide-react";
-import { managerApi } from "../../api/managerApi";
 import { useManagerData } from "../../hooks/useManagerData";
+import { useManagerSession } from "../../hooks/useManagerSession";
 import { CLASS_LIST } from "../../config/forms";
 import { currentMonth, formatPercent, matchesQuery, monthLabel, shiftMonth } from "../../utils/format";
 import DataState from "../common/DataState";
@@ -19,16 +19,11 @@ const CELL = {
   leave: { letter: "L", style: "bg-amber-100 text-amber-700", title: "Leave" },
 };
 
-// "group|month|className" ek key me (useManagerData ko ek hi stable function + ek argument chahiye)
-const fetchMonth = (key) => {
-  const [group, month, className] = key.split("|");
-  return managerApi.attendanceMonth(group, month, className);
-};
-
 // Pichle mahine (ya kisi bhi mahine) ki attendance, din-ba-din.
 // Attendance badalni ho to Daily view me us din ki date chuno.
-export default function MonthlyAttendance({ group, month, onMonthChange }) {
-  const [className, setClassName] = useState("");
+// fixedClass: class teacher ke liye, class chunne ka dropdown nahi dikhta (server bhi sirf uski class ka data deta hai).
+export default function MonthlyAttendance({ group, month, onMonthChange, fixedClass = "" }) {
+  const [className, setClassName] = useState(fixedClass);
   const thisMonth = currentMonth();
   const needsClass = group === "students" && !className;
 
@@ -47,7 +42,7 @@ export default function MonthlyAttendance({ group, month, onMonthChange }) {
         <ActionButton variant="outline" icon={ChevronRight} onClick={() => onMonthChange(shiftMonth(month, 1))} disabled={month >= thisMonth} aria-label="Next month" />
         <ActionButton variant="soft" onClick={() => onMonthChange(shiftMonth(thisMonth, -1))} disabled={month === shiftMonth(thisMonth, -1)}>Last Month</ActionButton>
         <ActionButton variant="soft" onClick={() => onMonthChange(thisMonth)} disabled={month === thisMonth}>This Month</ActionButton>
-        {group === "students" && <SelectFilter value={className} onChange={setClassName} options={CLASS_OPTIONS} label="Class" />}
+        {group === "students" && !fixedClass && <SelectFilter value={className} onChange={setClassName} options={CLASS_OPTIONS} label="Class" />}
       </div>
 
       {needsClass ? (
@@ -62,6 +57,12 @@ export default function MonthlyAttendance({ group, month, onMonthChange }) {
 }
 
 function MonthReport({ group, month, className }) {
+  const { api } = useManagerSession();
+  // "group|month|className" ek key me (useManagerData ko ek hi stable function + ek argument chahiye)
+  const fetchMonth = useCallback((key) => {
+    const [g, m, c] = key.split("|");
+    return api.attendanceMonth(g, m, c);
+  }, [api]);
   const { data, loading, error, reload } = useManagerData(fetchMonth, `${group}|${month}|${className}`);
   const [search, setSearch] = useState("");
 

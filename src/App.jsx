@@ -34,12 +34,16 @@ import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import NotFound from "./pages/NotFound/NotFound";
 import ManagerDashboard from "./ManagerDashboard/ManagerDashboard";
+import PrincipalDashboard from "./PrincipalDashboard/PrincipalDashboard";
+import TeacherDashboard from "./TeacherDashboard/TeacherDashboard";
 
 function App() {
   return (
     <Routes>
-      {/* Manager dashboard ka apna layout hai (sidebar), isliye school ke Navbar/Footer wale Layout ke bahar */}
+      {/* Manager, Principal aur Teacher dashboard ka apna layout hai (sidebar), isliye school ke Navbar/Footer wale Layout ke bahar */}
       <Route path="manager/*" element={<ManagerDashboard />} />
+      <Route path="principal/*" element={<PrincipalDashboard />} />
+      <Route path="teacher/*" element={<TeacherDashboard />} />
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />

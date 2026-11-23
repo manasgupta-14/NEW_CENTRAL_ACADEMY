@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { BASE_PATH } from "./config/navigation";
 import ManagerSessionProvider from "./context/ManagerSessionProvider";
-import { useManagerSession } from "./hooks/useManagerSession";
+import { managerApi } from "./api/managerApi";
 import ManagerLayout from "./components/layout/ManagerLayout";
 import DashboardPage from "./pages/DashboardPage";
 import StaffPage from "./pages/StaffPage";
@@ -15,21 +15,6 @@ import AdminsPage from "./pages/AdminsPage";
 import AttendancePage from "./pages/AttendancePage";
 import FeedbackPage from "./pages/FeedbackPage";
 import ProfilePage from "./pages/ProfilePage";
-
-// Principal ko sirf Subjects aur Teacher Assignments dikhte hain. Baaki sab Manager ke liye hai
-// (backend bhi baaki routes par principal ko rok deta hai).
-function PrincipalRoutes() {
-  const home = `${BASE_PATH}/subjects`;
-  return (
-    <Routes>
-      <Route element={<ManagerLayout />}>
-        <Route path="subjects" element={<SubjectsPage />} />
-        <Route path="teacher-assignments" element={<TeacherAssignmentsPage />} />
-        <Route path="*" element={<Navigate to={home} replace />} />
-      </Route>
-    </Routes>
-  );
-}
 
 function ManagerRoutes() {
   return (
@@ -55,17 +40,12 @@ function ManagerRoutes() {
   );
 }
 
-function RoleRoutes() {
-  const { role } = useManagerSession();
-  return role === "principal" ? <PrincipalRoutes /> : <ManagerRoutes />;
-}
-
 // Entry point: App.jsx me sirf <Route path="manager/*" element={<ManagerDashboard />} /> lagta hai.
 // Har route par `key` hai taaki page badalne par search/filter state reset ho jaye.
 export default function ManagerDashboard() {
   return (
-    <ManagerSessionProvider>
-      <RoleRoutes />
+    <ManagerSessionProvider roles={["manager"]} api={managerApi}>
+      <ManagerRoutes />
     </ManagerSessionProvider>
   );
 }

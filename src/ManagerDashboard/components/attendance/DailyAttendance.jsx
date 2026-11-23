@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CalendarX, CheckCircle2, Clock3, XCircle } from "lucide-react";
-import { managerApi } from "../../api/managerApi";
 import { useManagerData } from "../../hooks/useManagerData";
+import { useManagerSession } from "../../hooks/useManagerSession";
 import { groupByClass } from "../../utils/classes";
 import { formatPercent, todayLocal } from "../../utils/format";
 import DataState from "../common/DataState";
@@ -9,18 +9,20 @@ import StatCard from "../common/StatCard";
 import ClassCardGrid from "../classes/ClassCardGrid";
 import AttendanceList from "./AttendanceList";
 
-// useManagerData ko ek hi stable function aur ek hi argument chahiye, isliye "group|date" ek key me
-const fetchAttendance = (key) => {
-  const [group, date] = key.split("|");
-  return managerApi.attendance(group, date);
-};
-
 const count = (rows, status) => rows.filter((r) => (r.status || "unmarked") === status).length;
 const sum = (rows, fn) => rows.reduce((a, r) => a + fn(r), 0);
 
 // Kisi ek din ki attendance dekhna / lagana. Students me pehle class chuno.
-export default function DailyAttendance({ group, date, onDateChange }) {
-  const [className, setClassName] = useState(null);
+//   canMark    : false ho to sirf dekh sakte hain (Principal students ki attendance sirf dekhta hai)
+//   fixedClass : class teacher ke liye, seedha apni class khulti hai aur "All Classes" nahi dikhta
+export default function DailyAttendance({ group, date, onDateChange, canMark = true, fixedClass = "" }) {
+  const { api } = useManagerSession();
+  const [className, setClassName] = useState(fixedClass || null);
+  // useManagerData ko ek hi stable function aur ek hi argument chahiye, isliye "group|date" ek key me
+  const fetchAttendance = useCallback((key) => {
+    const [g, d] = key.split("|");
+    return api.attendance(g, d);
+  }, [api]);
   const { data, loading, error, reload } = useManagerData(fetchAttendance, `${group}|${date}`);
 
   const dateInput = (
@@ -56,7 +58,7 @@ export default function DailyAttendance({ group, date, onDateChange }) {
     <>
       {dateInput}
 
-      {!inClass && (
+      {(!inClass || fixedClass) && (
         <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard title="Present" value={count(rows, "present")} icon={CheckCircle2} iconBg="bg-emerald-100 text-emerald-600" />
           <StatCard title="Absent" value={count(rows, "absent")} icon={XCircle} iconBg="bg-red-100 text-red-600" />
@@ -91,7 +93,8 @@ export default function DailyAttendance({ group, date, onDateChange }) {
           date={date}
           rows={classRows}
           onSaved={reload}
-          onBack={inClass ? () => setClassName(null) : null}
+          canMark={canMark && data.canMark !== false}
+          onBack={inClass && !fixedClass ? () => setClassName(null) : null}
           emptyMessage={inClass ? "No students in this class yet." : group === "teachers" ? "No active teachers added yet." : "No active principal added yet."}
         />
       )}

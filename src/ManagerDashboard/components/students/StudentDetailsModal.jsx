@@ -9,7 +9,8 @@ import InlineError from "../common/InlineError";
 import StatusBadge from "../common/StatusBadge";
 import { formatCurrency, formatDate, formatPercent, STATUS_LABELS } from "../../utils/format";
 
-export default function StudentDetailsModal({ student, onClose, onChanged }) {
+// readOnly: Principal / Teacher ke liye, fee jama karna aur status badalna nahi dikhta (wo sirf Manager ka kaam hai)
+export default function StudentDetailsModal({ student, onClose, onChanged, readOnly = false }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [amount, setAmount] = useState("");
@@ -81,7 +82,7 @@ export default function StudentDetailsModal({ student, onClose, onChanged }) {
             <ProfileItem icon={Wallet} label="Pending Fee" value={formatCurrency(student.remainingFee)} />
           </div>
 
-          {student.remainingFee > 0 && (
+          {!readOnly && student.remainingFee > 0 && (
             <form onSubmit={pay} className="mt-5 flex gap-3">
               <input
                 type="number"
@@ -99,12 +100,16 @@ export default function StudentDetailsModal({ student, onClose, onChanged }) {
           )}
         </div>
 
-        <div className="mt-6"><InlineError message={error} /></div>
-        <div className="mt-6 flex justify-end">
-          <ActionButton variant="soft" icon={RefreshCcw} onClick={toggleStatus} disabled={busy}>
-            {busy ? "Saving..." : passedOut ? "Move back to Current" : "Mark as Passed Out"}
-          </ActionButton>
-        </div>
+        {!readOnly && (
+          <>
+            <div className="mt-6"><InlineError message={error} /></div>
+            <div className="mt-6 flex justify-end">
+              <ActionButton variant="soft" icon={RefreshCcw} onClick={toggleStatus} disabled={busy}>
+                {busy ? "Saving..." : passedOut ? "Move back to Current" : "Mark as Passed Out"}
+              </ActionButton>
+            </div>
+          </>
+        )}
       </div>
     </Modal>
   );

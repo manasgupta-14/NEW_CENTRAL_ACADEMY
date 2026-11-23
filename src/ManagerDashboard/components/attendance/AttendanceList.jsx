@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ArrowLeft, CheckCheck, ClipboardCheck, Save } from "lucide-react";
-import { managerApi } from "../../api/managerApi";
+import { ArrowLeft, CheckCheck, ClipboardCheck, Eye, Save } from "lucide-react";
+import { useManagerSession } from "../../hooks/useManagerSession";
 import Avatar from "../common/Avatar";
 import SearchBox from "../common/SearchBox";
 import EmptyState from "../common/EmptyState";
@@ -17,7 +17,8 @@ const OPTIONS = [
 
 // Ek list (class ke students / teachers / principal) ki attendance, us date ke liye.
 // "Mark Attendance" dabane par har naam ke aage P / A / L aa jaate hain, Save karne par ek saath save hota hai.
-export default function AttendanceList({ title, subtitle, group, date, rows, onSaved, onBack, emptyMessage }) {
+export default function AttendanceList({ title, subtitle, group, date, rows, onSaved, onBack, emptyMessage, canMark = true }) {
+  const { api } = useManagerSession();
   const [search, setSearch] = useState("");
   const [draft, setDraft] = useState(null); // null = sirf dekh rahe hain, object = edit mode { id: status }
   const [busy, setBusy] = useState(false);
@@ -36,7 +37,7 @@ export default function AttendanceList({ title, subtitle, group, date, rows, onS
     setBusy(true);
     setError("");
     try {
-      await managerApi.markAttendance(group, { date, records: rows.map((r) => ({ id: r.id, status: draft[r.id] })) });
+      await api.markAttendance(group, { date, records: rows.map((r) => ({ id: r.id, status: draft[r.id] })) });
       setDraft(null);
       onSaved();
     } catch (err) {
@@ -50,7 +51,12 @@ export default function AttendanceList({ title, subtitle, group, date, rows, onS
     <>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         {onBack ? <ActionButton variant="outline" icon={ArrowLeft} onClick={onBack}>All Classes</ActionButton> : <span />}
-        {rows.length > 0 && (
+        {rows.length > 0 && !canMark && (
+          <span className="inline-flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700">
+            <Eye size={16} /> View only
+          </span>
+        )}
+        {rows.length > 0 && canMark && (
           <div className="flex flex-wrap gap-3">
             {editing ? (
               <>

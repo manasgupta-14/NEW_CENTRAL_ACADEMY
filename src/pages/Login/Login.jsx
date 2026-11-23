@@ -7,6 +7,7 @@ import Button from "../../components/common/Button";
 import FormField from "../../components/forms/FormField";
 import SuccessState from "../../components/forms/SuccessState";
 import { api, setToken } from "../../utils/api";
+import { ROLE_HOME } from "../../ManagerDashboard/config/roles";
 
 const AUDIENCES = [
   { key: "student", label: "Student" },
@@ -56,12 +57,8 @@ function Login() {
       if (next === "login-done") {
         const res = await api("/auth/login", { method: "POST", body });
         setToken(res.token);
-        if (res.role === "manager") {
-          navigate("/manager", { replace: true }); // manager seedha dashboard par jaata hai
-          return;
-        }
-        if (res.role === "principal") {
-          navigate("/manager/subjects", { replace: true }); // principal ko Subjects / Teacher Assignments wala panel milta hai
+        if (ROLE_HOME[res.role]) {
+          navigate(ROLE_HOME[res.role], { replace: true }); // manager, principal aur teacher seedha apne dashboard par jaate hain
           return;
         }
         setSession(res);

@@ -2,12 +2,12 @@ import { LayoutDashboard, GraduationCap, BriefcaseBusiness, History, ShieldCheck
 
 export const BASE_PATH = "/manager";
 
-// Principal bhi isi panel me aata hai, lekin use sirf `principalToo: true` wale pages dikhte hain (Subjects aur Teacher Assignments).
+// Manager ke sidebar ke pages. Principal aur Teacher ke apne dashboards hain (PrincipalDashboard/, TeacherDashboard/).
 export const NAV_ITEMS = [
   { to: BASE_PATH, label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: `${BASE_PATH}/teaching-staff`, label: "Teaching Staff", icon: GraduationCap },
-  { to: `${BASE_PATH}/subjects`, label: "Subjects", icon: BookOpen, principalToo: true },
-  { to: `${BASE_PATH}/teacher-assignments`, label: "Teacher Assignments", icon: ClipboardList, principalToo: true },
+  { to: `${BASE_PATH}/subjects`, label: "Subjects", icon: BookOpen },
+  { to: `${BASE_PATH}/teacher-assignments`, label: "Teacher Assignments", icon: ClipboardList },
   { to: `${BASE_PATH}/non-teaching-staff`, label: "Non-Teaching Staff", icon: BriefcaseBusiness },
   { to: `${BASE_PATH}/staff-history`, label: "Staff History", icon: History },
   { to: `${BASE_PATH}/admins`, label: "Admins", icon: UserCog },
@@ -19,3 +19,13 @@ export const NAV_ITEMS = [
   { to: `${BASE_PATH}/feedback`, label: "Feedback", icon: MessageSquareText },
   { to: `${BASE_PATH}/profile`, label: "My Profile", icon: UserRound },
 ];
+
+// Layout (Sidebar / Topbar) is config se banta hai, isliye Principal aur Teacher dashboard bhi wahi layout use karte hain.
+export const MANAGER_PANEL = {
+  basePath: BASE_PATH,
+  roleLabel: "Manager",
+  label: "Manager Panel",
+  title: "Manager Dashboard",
+  profilePath: `${BASE_PATH}/profile`,
+  nav: NAV_ITEMS,
+};
